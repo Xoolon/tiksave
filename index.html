@@ -1,15 +1,311 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/favinew.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-     <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body>
+    <!-- ============================================================
+         PRIMARY SEO META TAGS
+         ============================================================ -->
+    <title>TikTok Video Downloader — Save Without Watermark Free | TikTSave</title>
+    <meta name="description" content="Download any TikTok video without watermark in HD quality — free, fast, and no app required. Works on iPhone, Android, and PC. Just paste the link and save instantly.">
+    <meta name="author" content="TikTSave">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="3 days">
+    <meta name="rating" content="General">
+    <meta name="distribution" content="global">
+    <meta name="theme-color" content="#FF0050">
+    <link rel="canonical" href="https://tiktsave.shop/">
+
+    <!-- ============================================================
+         OPEN GRAPH (Facebook, WhatsApp, LinkedIn sharing)
+         ============================================================ -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tiktsave.shop/">
+    <meta property="og:site_name" content="TikTok Video Downloader">
+    <meta property="og:title" content="TikTok Video Downloader — Download Without Watermark Free">
+    <meta property="og:description" content="Save any TikTok video without watermark in HD quality. Free, fast, no registration needed. Works on all devices.">
+    <meta property="og:image" content="https://tiktsave.shop/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="TikTSave — TikTok Video Downloader without watermark">
+    <meta property="og:locale" content="en_US">
+
+    <!-- ============================================================
+         TWITTER / X CARD
+         ============================================================ -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://tiktsave.shop/">
+    <meta name="twitter:title" content="TikTok Video Downloader — Download Without Watermark Free">
+    <meta name="twitter:description" content="Save any TikTok video without watermark in HD. Free, fast, no app required.">
+    <meta name="twitter:image" content="https://tiktsave.shop/og-image.jpg">
+
+    <!-- ============================================================
+         MOBILE / PWA
+         ============================================================ -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TikTSave">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- ============================================================
+         FAVICON — make sure these files exist in your /public folder
+         ============================================================ -->
+    <link rel="icon" type="image/png" href="/favinew.png" />
+    <link rel="manifest" href="/site.webmanifest">
+
+    <!-- ============================================================
+         PRECONNECT (performance)
+         ============================================================ -->
+    <link rel="preconnect" href="https://www.tiktok.com">
+    <link rel="preconnect" href="https://vm.tiktok.com">
+    <link rel="dns-prefetch" href="https://www.tiktok.com">
+
+    <!-- ============================================================
+         GOOGLE ANALYTICS 4 — replace G-XXXXXXXXXX with your real ID
+         ============================================================ -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <!-- ============================================================
+         GOOGLE ADSENSE — replace ca-pub-XXXXXXXXXX with your real ID
+         ============================================================ -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9505934511045266"
+         crossorigin="anonymous"></script>
+
+    <!-- ============================================================
+         SCHEMA.ORG — WebApplication
+         ============================================================ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "TikTok Video Downloader",
+      "alternateName": ["TikTSave", "TikTok Downloader Without Watermark", "TikTok Saver"],
+      "url": "https://tiktsave.shop",
+      "description": "Download TikTok videos without watermark in HD quality for free. Fast, reliable, and easy. No registration required.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web Browser, iOS, Android, Windows, macOS",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "softwareVersion": "2.0",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      },
+      "featureList": [
+        "Download TikTok videos without watermark",
+        "HD video quality up to 1080p",
+        "Fast processing — results in seconds",
+        "No registration required",
+        "Free unlimited downloads",
+        "Works on all devices"
+      ]
+    }
+    </script>
+
+    <!-- ============================================================
+         SCHEMA.ORG — Organization
+         ============================================================ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "TikTSave",
+      "url": "https://tiktsave.shop",
+      "logo": "https://tiktsave.shop/logo.png"
+    }
+    </script>
+
+    <!-- ============================================================
+         SCHEMA.ORG — FAQPage
+         ============================================================ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I download TikTok videos without watermark?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Copy the TikTok video link, paste it into TikTSave, and click Download. Select the 'No Watermark' option to save the video in HD without any TikTok branding."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is TikTSave free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, TikTSave is 100% free. No account, no payment, and no subscription required. Download unlimited TikTok videos at no cost."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does TikTSave work on iPhone and Android?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. TikTSave works on all devices including iPhone, iPad, Android phones, tablets, Windows PC, and Mac — no app installation needed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What video quality can I download?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Videos are downloaded in their original quality, up to 1080p HD. We preserve the highest quality available directly from TikTok."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I download private TikTok videos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. TikTSave can only download publicly available TikTok videos. Private videos are not accessible without the creator's permission."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it work with short TikTok links (vm.tiktok.com)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. TikTSave supports all TikTok URL formats including vm.tiktok.com, vt.tiktok.com, and standard TikTok links."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is it legal to download TikTok videos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Downloading TikTok videos for personal use is generally acceptable. Always respect creator rights, avoid redistributing without permission, and follow TikTok's terms of service."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- ============================================================
+         SCHEMA.ORG — HowTo
+         ============================================================ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Download TikTok Videos Without Watermark",
+      "description": "Download any TikTok video in HD quality without watermark in 3 simple steps using TikTSave.",
+      "totalTime": "PT30S",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Copy the TikTok Video Link",
+          "text": "Open TikTok, find the video, tap Share, then tap Copy Link."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Paste the Link into TikTSave",
+          "text": "Go to tiktsave.shop, paste the link into the input field, and press Download."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Save the Video",
+          "text": "Choose 'No Watermark' for clean HD video, then tap the download button to save to your device."
+        }
+      ]
+    }
+    </script>
+
+    <!-- ============================================================
+         SCHEMA.ORG — BreadcrumbList
+         ============================================================ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "TikTok Video Downloader",
+        "item": "https://tiktsave.shop"
+      }]
+    }
+    </script>
+ <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+    <!--
+        Static content for search engine and AdSense crawlers.
+        React will render over this once it loads.
+        DO NOT REMOVE — this is required for AdSense verification and SEO indexing.
+    -->
+    <div id="static-content" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">
+        <h1>TikTok Video Downloader — TikTSave</h1>
+        <p>Download TikTok videos without watermark in HD quality for free. Fast, reliable, and easy. No registration required. Works on iPhone, Android, PC, and Mac.</p>
+        <h2>How to Download TikTok Videos Without Watermark</h2>
+        <ol>
+            <li>Copy the TikTok video link from the app or browser.</li>
+            <li>Paste the link into the input box on tiktsave.shop.</li>
+            <li>Select the No Watermark option and click Download to save your video.</li>
+        </ol>
+        <h2>Features</h2>
+        <ul>
+            <li>Download TikTok videos without watermark</li>
+            <li>HD quality up to 1080p resolution</li>
+            <li>Free and unlimited downloads</li>
+            <li>No account or registration needed</li>
+            <li>Works on all devices and browsers</li>
+            <li>Supports all TikTok URL formats including vm.tiktok.com</li>
+        </ul>
+        <h2>Frequently Asked Questions</h2>
+        <h3>Is TikTSave free?</h3>
+        <p>Yes, TikTSave is completely free to use with no registration or payment required.</p>
+        <h3>Does it work on iPhone and Android?</h3>
+        <p>Yes, TikTSave works on all devices including iPhone, Android, Windows PC, and Mac.</p>
+        <h3>Can I download private TikTok videos?</h3>
+        <p>No, only publicly available TikTok videos can be downloaded.</p>
+    </div>
+
     <div id="root"></div>
+
+    <!-- React app renders here -->
     <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+    <!-- Fallback for users with JavaScript disabled -->
+    <noscript>
+        <div style="padding: 40px 20px; max-width: 800px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;">
+            <h1 style="color: #FF0050; font-size: 2.2em; margin-bottom: 10px;">TikTok Video Downloader</h1>
+            <p style="color: #888; font-size: 0.95em; margin-bottom: 20px;">by TikTSave</p>
+            <h2 style="color: #333; font-size: 1.3em; margin-bottom: 15px;">Download TikTok Videos Without Watermark — Free & HD</h2>
+            <p style="font-size: 1.05em; line-height: 1.7; color: #555;">
+                Please enable JavaScript to use TikTSave. Our tool lets you download any TikTok video without a watermark in HD quality, completely free — no account needed.
+            </p>
+            <h3 style="color: #FF0050; margin-top: 30px;">Features</h3>
+            <ul style="font-size: 1em; line-height: 1.9; color: #555;">
+                <li>Download TikTok videos without watermark</li>
+                <li>HD quality up to 1080p</li>
+                <li>Works on iPhone, Android, PC, and Mac</li>
+                <li>No app or registration required</li>
+                <li>Unlimited free downloads</li>
+            </ul>
+            <h3 style="color: #FF0050; margin-top: 30px;">How to Use</h3>
+            <ol style="font-size: 1em; line-height: 1.9; color: #555;">
+                <li>Copy the TikTok video link from the app</li>
+                <li>Paste it into tiktsave.shop</li>
+                <li>Choose No Watermark and download</li>
+            </ol>
+        </div>
+    </noscript>
+</body>
 </html>
