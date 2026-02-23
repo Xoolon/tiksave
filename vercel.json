@@ -37,10 +37,5 @@
       ]
     }
   ],
-  "regions": ["iad1"],
-  "functions": {
-    "api/**/*.js": {
-      "maxDuration": 10
-    }
-  }
+  "regions": ["iad1"]
 }
