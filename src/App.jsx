@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
@@ -84,27 +84,6 @@ const IconHeart = () => (
   </svg>
 );
 
-// ─── Ad Placeholder ───────────────────────────────────────────────────────────
-const AdBanner = ({ label = 'Advertisement' }) => (
-  <div style={{
-    background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-    border: '1px solid rgba(255,255,255,0.08)',
-    borderRadius: '12px',
-    padding: '16px',
-    textAlign: 'center',
-    color: 'rgba(255,255,255,0.3)',
-    fontSize: '12px',
-    letterSpacing: '0.08em',
-    textTransform: 'uppercase',
-    minHeight: '90px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }}>
-    {label} · AdSense / AdMob Slot
-  </div>
-);
-
 // ─── Spinner ──────────────────────────────────────────────────────────────────
 const Spinner = ({ size = 24, color = '#fe2c55' }) => (
   <div style={{
@@ -118,54 +97,17 @@ const Spinner = ({ size = 24, color = '#fe2c55' }) => (
   }} />
 );
 
-// ─── Progress Ring ────────────────────────────────────────────────────────────
-const ProgressRing = ({ seconds, total = 15 }) => {
-  const r = 36;
-  const circ = 2 * Math.PI * r;
-  const progress = ((total - seconds) / total) * circ;
-  return (
-    <svg width="100" height="100" viewBox="0 0 100 100">
-      <circle cx="50" cy="50" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="6" />
-      <circle
-        cx="50" cy="50" r={r} fill="none"
-        stroke="#fe2c55"
-        strokeWidth="6"
-        strokeDasharray={circ}
-        strokeDashoffset={circ - progress}
-        strokeLinecap="round"
-        transform="rotate(-90 50 50)"
-        style={{ transition: 'stroke-dashoffset 1s linear' }}
-      />
-      <text x="50" y="56" textAnchor="middle" fill="white" fontSize="22" fontWeight="700" fontFamily="'DM Mono', monospace">
-        {seconds}
-      </text>
-    </svg>
-  );
-};
-
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function TikTokDownloader() {
   const [url, setUrl] = useState('');
-  const [phase, setPhase] = useState('idle');
+  const [phase, setPhase] = useState('idle'); // idle, fetching, ready, downloading, done, error
   const [error, setError] = useState('');
   const [videoData, setVideoData] = useState(null);
-  const [adTimer, setAdTimer] = useState(15);
-  const [downloadingType, setDownloadingType] = useState(null);
   const [downloadProgress, setDownloadProgress] = useState('');
-  const adIntervalRef = useRef(null);
 
-  useEffect(() => () => clearInterval(adIntervalRef.current), []);
-
-  const startAdCountdown = () => {
-    setAdTimer(15);
-    setPhase('ad');
-    adIntervalRef.current = setInterval(() => {
-      setAdTimer(prev => {
-        if (prev <= 1) { clearInterval(adIntervalRef.current); return 0; }
-        return prev - 1;
-      });
-    }, 1000);
-  };
+  useEffect(() => {
+    document.title = 'TikTSave – Download TikTok Videos Without Watermark For Free';
+  }, []);
 
   const handleFetch = async () => {
     const trimmed = url.trim();
@@ -185,7 +127,7 @@ export default function TikTokDownloader() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || `Server error (${res.status})`);
       setVideoData(data);
-      startAdCountdown();
+      setPhase('ready'); // Show download options
     } catch (err) {
       setError(err.message || 'Failed to fetch video. Please check the URL and try again.');
       setPhase('error');
@@ -193,12 +135,11 @@ export default function TikTokDownloader() {
   };
 
   const handleDownload = async (type) => {
-    if (adTimer > 0 || !videoData) return;
+    if (!videoData) return;
     const nowatermark = type === 'nowatermark';
     const filename = nowatermark ? videoData.filename_nowatermark : videoData.filename_watermark;
     const tiktokUrl = videoData.tiktok_url.replace(/^["']|["']$/g, '');
 
-    setDownloadingType(type);
     setDownloadProgress('Extracting fresh download link…');
     setPhase('downloading');
 
@@ -225,22 +166,23 @@ export default function TikTokDownloader() {
     } catch (err) {
       setError(err.message || 'Download failed. Please try again.');
       setPhase('error');
-      setDownloadingType(null);
       setDownloadProgress('');
     }
   };
 
   const reset = () => {
-    setUrl(''); setPhase('idle'); setError(''); setVideoData(null);
-    setAdTimer(15); setDownloadingType(null); setDownloadProgress('');
-    clearInterval(adIntervalRef.current);
+    setUrl('');
+    setPhase('idle');
+    setError('');
+    setVideoData(null);
+    setDownloadProgress('');
   };
 
   const isFetching = phase === 'fetching';
+  const isReady = phase === 'ready';
   const isDownloading = phase === 'downloading';
   const isDone = phase === 'done';
   const isError = phase === 'error';
-  const showAd = phase === 'ad';
 
   return (
     <>
@@ -254,7 +196,6 @@ export default function TikTokDownloader() {
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
         @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
-        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
 
         .fade-up { animation: fadeUp 0.4s ease forwards; }
 
@@ -273,7 +214,6 @@ export default function TikTokDownloader() {
           width: 100%;
         }
 
-        /* ── Header ── */
         .tts-header {
           padding-top: 40px;
           padding-bottom: 32px;
@@ -328,7 +268,6 @@ export default function TikTokDownloader() {
           .tts-subtitle { font-size: 16px; }
         }
 
-        /* ── Cards ── */
         .tts-card {
           background: rgba(255,255,255,0.04);
           border: 1px solid rgba(255,255,255,0.08);
@@ -340,7 +279,6 @@ export default function TikTokDownloader() {
           .tts-card { border-radius: 20px; padding: 28px; margin-bottom: 16px; }
         }
 
-        /* ── Input area ── */
         .tts-input-wrap {
           display: flex;
           flex-direction: column;
@@ -397,7 +335,6 @@ export default function TikTokDownloader() {
         .tts-btn:active:not(:disabled) { transform: scale(0.98); }
         .tts-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* ── Section label ── */
         .tts-section-label {
           font-size: 11px;
           font-weight: 700;
@@ -408,7 +345,6 @@ export default function TikTokDownloader() {
           display: block;
         }
 
-        /* ── Error ── */
         .tts-error {
           display: flex;
           align-items: flex-start;
@@ -423,7 +359,6 @@ export default function TikTokDownloader() {
           line-height: 1.5;
         }
 
-        /* ── Video card ── */
         .tts-video-card {
           display: flex;
           gap: 14px;
@@ -479,7 +414,6 @@ export default function TikTokDownloader() {
           gap: 4px;
         }
 
-        /* ── Fetching indicator ── */
         .tts-fetching-indicator {
           display: flex;
           align-items: center;
@@ -498,7 +432,6 @@ export default function TikTokDownloader() {
           flex-shrink: 0;
         }
 
-        /* ── Downloading box ── */
         .tts-downloading-box {
           display: flex;
           align-items: center;
@@ -512,7 +445,6 @@ export default function TikTokDownloader() {
           margin-top: 16px;
         }
 
-        /* ── Done box ── */
         .tts-done-box {
           display: flex;
           flex-direction: column;
@@ -554,7 +486,6 @@ export default function TikTokDownloader() {
         }
         .tts-reset-btn:hover { opacity: 0.8; }
 
-        /* ── Disclaimer ── */
         .tts-disclaimer {
           background: rgba(255,200,0,0.05);
           border: 1px solid rgba(255,200,0,0.15);
@@ -569,7 +500,6 @@ export default function TikTokDownloader() {
           .tts-disclaimer { margin-bottom: 16px; padding: 16px 18px; }
         }
 
-        /* ── Features grid ── */
         .tts-features-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
@@ -625,7 +555,6 @@ export default function TikTokDownloader() {
           .tts-feature-sub { font-size: 12px; }
         }
 
-        /* ── How to steps ── */
         .tts-steps {
           display: flex;
           flex-direction: column;
@@ -677,7 +606,6 @@ export default function TikTokDownloader() {
           .tts-step-desc { font-size: 13px; }
         }
 
-        /* ── FAQ ── */
         .tts-faq {
           display: flex;
           flex-direction: column;
@@ -707,7 +635,6 @@ export default function TikTokDownloader() {
           .tts-faq-a { font-size: 14px; }
         }
 
-        /* ── Footer ── */
         .tts-footer {
           text-align: center;
           color: rgba(255,255,255,0.2);
@@ -719,113 +646,12 @@ export default function TikTokDownloader() {
           .tts-footer { font-size: 12px; }
         }
 
-        /* ── Ad gap ── */
-        .tts-ad-gap { margin-bottom: 12px; }
-        @media (min-width: 480px) { .tts-ad-gap { margin-bottom: 16px; } }
-
-        /* ── Modal ── */
-        .tts-modal-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(0,0,0,0.92);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          z-index: 1000;
-          display: flex;
-          align-items: flex-end;
-          justify-content: center;
-          padding: 0;
-        }
-        @media (min-width: 540px) {
-          .tts-modal-overlay {
-            align-items: center;
-            padding: 20px;
-          }
-        }
-
-        .tts-modal {
-          background: #12121c;
-          border: 1px solid rgba(255,255,255,0.1);
-          border-radius: 24px 24px 0 0;
-          padding: 28px 20px 36px;
-          width: 100%;
-          max-width: 100%;
-          text-align: center;
-        }
-        @media (min-width: 540px) {
-          .tts-modal {
-            border-radius: 24px;
-            padding: 40px 36px;
-            max-width: 480px;
-          }
-        }
-
-        /* Drag handle for mobile bottom sheet feel */
-        .tts-modal-handle {
-          width: 40px;
-          height: 4px;
-          background: rgba(255,255,255,0.15);
-          border-radius: 2px;
-          margin: 0 auto 24px;
-        }
-        @media (min-width: 540px) {
-          .tts-modal-handle { display: none; }
-        }
-
-        .tts-modal-title {
-          font-size: 20px;
-          font-weight: 800;
-          color: #fff;
-          margin: 0 0 6px;
-        }
-        @media (min-width: 480px) {
-          .tts-modal-title { font-size: 22px; }
-        }
-
-        .tts-modal-sub {
-          color: rgba(255,255,255,0.4);
-          font-size: 13px;
-          margin: 0 0 24px;
-        }
-        @media (min-width: 480px) {
-          .tts-modal-sub { font-size: 14px; margin: 0 0 28px; }
-        }
-
-        .tts-ad-zone {
-          background: linear-gradient(135deg, #1a1a2e, #0f3460);
-          border: 1px solid rgba(255,255,255,0.06);
-          border-radius: 14px;
-          padding: 28px 20px;
-          margin-bottom: 24px;
-          min-height: 100px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: rgba(255,255,255,0.2);
-          font-size: 11px;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-        }
-        @media (min-width: 480px) {
-          .tts-ad-zone { border-radius: 16px; padding: 32px; min-height: 120px; font-size: 12px; margin-bottom: 28px; }
-        }
-
-        .tts-timer-section {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 10px;
-        }
-
-        .tts-timer-label {
-          color: rgba(255,255,255,0.5);
-          font-size: 13px;
-        }
-
+        /* Download options grid */
         .tts-download-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 10px;
+          margin-top: 16px;
         }
         @media (min-width: 480px) {
           .tts-download-grid { gap: 12px; }
@@ -870,17 +696,6 @@ export default function TikTokDownloader() {
           .tts-dl-btn-sub { font-size: 11px; }
         }
 
-        .tts-ready-label {
-          color: #34c759;
-          font-weight: 700;
-          font-size: 14px;
-          margin-bottom: 14px;
-        }
-        @media (min-width: 480px) {
-          .tts-ready-label { font-size: 15px; margin-bottom: 16px; }
-        }
-
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
@@ -889,7 +704,6 @@ export default function TikTokDownloader() {
       <div className="tts-root">
         <div className="tts-grid">
 
-          {/* ── Header ── */}
           <header className="tts-header fade-up">
             <div className="tts-badge">
               <IconSparkle />
@@ -904,12 +718,6 @@ export default function TikTokDownloader() {
             </p>
           </header>
 
-          {/* ── Top Ad ── */}
-          <div className="tts-ad-gap">
-            <AdBanner label="Top Banner — AdSense Slot #1" />
-          </div>
-
-          {/* ── Input Card ── */}
           <div className="tts-card fade-up">
             <span className="tts-section-label">Paste your TikTok link</span>
 
@@ -938,7 +746,6 @@ export default function TikTokDownloader() {
               </button>
             </div>
 
-            {/* Error */}
             {(isError || error) && (
               <div className="tts-error fade-up">
                 <IconAlert />
@@ -946,7 +753,6 @@ export default function TikTokDownloader() {
               </div>
             )}
 
-            {/* Fetching indicator */}
             {isFetching && (
               <div className="tts-fetching-indicator">
                 <div className="tts-pulse-dot" />
@@ -954,25 +760,55 @@ export default function TikTokDownloader() {
               </div>
             )}
 
-            {/* Video preview */}
-            {videoData && (showAd || isDownloading || isDone) && (
-              <div className="tts-video-card fade-up">
-                {videoData.thumbnail && (
-                  <img src={videoData.thumbnail} alt="thumbnail" className="tts-thumbnail" />
-                )}
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p className="tts-video-title">{videoData.title}</p>
-                  <p className="tts-video-author">@{videoData.author}</p>
-                  <div className="tts-video-stats">
-                    <span className="tts-stat"><IconClock /> {formatDuration(videoData.duration)}</span>
-                    {videoData.views && <span className="tts-stat"><IconEye /> {formatCount(videoData.views)}</span>}
-                    {videoData.likes && <span className="tts-stat"><IconHeart /> {formatCount(videoData.likes)}</span>}
+            {videoData && (isReady || isDownloading || isDone) && (
+              <>
+                <div className="tts-video-card fade-up">
+                  {videoData.thumbnail && (
+                    <img src={videoData.thumbnail} alt="thumbnail" className="tts-thumbnail" />
+                  )}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p className="tts-video-title">{videoData.title}</p>
+                    <p className="tts-video-author">@{videoData.author}</p>
+                    <div className="tts-video-stats">
+                      <span className="tts-stat"><IconClock /> {formatDuration(videoData.duration)}</span>
+                      {videoData.views && <span className="tts-stat"><IconEye /> {formatCount(videoData.views)}</span>}
+                      {videoData.likes && <span className="tts-stat"><IconHeart /> {formatCount(videoData.likes)}</span>}
+                    </div>
                   </div>
                 </div>
-              </div>
+
+                {isReady && (
+                  <div className="tts-download-grid fade-up">
+                    <button
+                      className="tts-dl-btn"
+                      style={{
+                        background: 'rgba(255,255,255,0.07)',
+                        border: '1px solid rgba(255,255,255,0.12)',
+                      }}
+                      onClick={() => handleDownload('watermark')}
+                    >
+                      <div style={{ color: 'rgba(255,255,255,0.5)', marginBottom: 2 }}><IconWatermark /></div>
+                      <span className="tts-dl-btn-label">With Watermark</span>
+                      <span className="tts-dl-btn-sub">Original TikTok file</span>
+                    </button>
+
+                    <button
+                      className="tts-dl-btn"
+                      style={{
+                        background: 'linear-gradient(135deg, #fe2c55, #8338ec)',
+                        border: '2px solid rgba(255,255,255,0.15)',
+                      }}
+                      onClick={() => handleDownload('nowatermark')}
+                    >
+                      <div style={{ marginBottom: 2 }}><IconSparkle /></div>
+                      <span className="tts-dl-btn-label">HD No Watermark</span>
+                      <span className="tts-dl-btn-sub">⭐ Recommended</span>
+                    </button>
+                  </div>
+                )}
+              </>
             )}
 
-            {/* Downloading state */}
             {isDownloading && (
               <div className="tts-downloading-box fade-up">
                 <Spinner size={18} color="#8338ec" />
@@ -980,7 +816,6 @@ export default function TikTokDownloader() {
               </div>
             )}
 
-            {/* Done state */}
             {isDone && (
               <div className="tts-done-box fade-up">
                 <div className="tts-check-circle"><IconCheck /></div>
@@ -992,12 +827,10 @@ export default function TikTokDownloader() {
             )}
           </div>
 
-          {/* ── Disclaimer ── */}
           <div className="tts-disclaimer">
             <strong style={{ color: 'rgba(255,200,0,0.7)' }}>Disclaimer:</strong> For personal use only. Users are responsible for complying with TikTok's Terms of Service and respecting creator copyright. Only download content you have permission to save.
           </div>
 
-          {/* ── Features ── */}
           <div className="tts-features-grid">
             {[
               { title: 'No Watermark', sub: 'Clean HD video without TikTok logo', icon: <IconSparkle /> },
@@ -1013,7 +846,6 @@ export default function TikTokDownloader() {
             ))}
           </div>
 
-          {/* ── How to use ── */}
           <div className="tts-card">
             <span className="tts-section-label">How to download</span>
             <div className="tts-steps">
@@ -1033,12 +865,6 @@ export default function TikTokDownloader() {
             </div>
           </div>
 
-          {/* ── Bottom Ad ── */}
-          <div className="tts-ad-gap">
-            <AdBanner label="Bottom Banner — AdMob Fallback Slot #2" />
-          </div>
-
-          {/* ── FAQ ── */}
           <div className="tts-card">
             <span className="tts-section-label">FAQ</span>
             <div className="tts-faq">
@@ -1056,7 +882,6 @@ export default function TikTokDownloader() {
             </div>
           </div>
 
-          {/* ── Footer ── */}
           <footer className="tts-footer">
             <p>© 2024 TikTok Video Downloader. Not affiliated with TikTok or ByteDance.</p>
             <p>Use downloaded content responsibly and respect creator rights.</p>
@@ -1064,59 +889,6 @@ export default function TikTokDownloader() {
 
         </div>
       </div>
-
-      {/* ── Ad Modal (15-second gate) ── */}
-      {showAd && (
-        <div className="tts-modal-overlay">
-          <div className="tts-modal fade-up">
-            <div className="tts-modal-handle" />
-            <p className="tts-modal-title">Almost there</p>
-            <p className="tts-modal-sub">Please wait for the ad to finish</p>
-
-            <div className="tts-ad-zone">
-              AdSense / AdMob Video Ad · 15 seconds · Supporting free service
-            </div>
-
-            {adTimer > 0 ? (
-              <div className="tts-timer-section">
-                <ProgressRing seconds={adTimer} />
-                <p className="tts-timer-label">Your download will be ready in {adTimer}s</p>
-              </div>
-            ) : (
-              <div className="fade-up">
-                <p className="tts-ready-label">✓ Ready to download</p>
-                <div className="tts-download-grid">
-                  <button
-                    className="tts-dl-btn"
-                    style={{
-                      background: 'rgba(255,255,255,0.07)',
-                      border: '1px solid rgba(255,255,255,0.12)',
-                    }}
-                    onClick={() => handleDownload('watermark')}
-                  >
-                    <div style={{ color: 'rgba(255,255,255,0.5)', marginBottom: 2 }}><IconWatermark /></div>
-                    <span className="tts-dl-btn-label">With Watermark</span>
-                    <span className="tts-dl-btn-sub">Original TikTok file</span>
-                  </button>
-
-                  <button
-                    className="tts-dl-btn"
-                    style={{
-                      background: 'linear-gradient(135deg, #fe2c55, #8338ec)',
-                      border: '2px solid rgba(255,255,255,0.15)',
-                    }}
-                    onClick={() => handleDownload('nowatermark')}
-                  >
-                    <div style={{ marginBottom: 2 }}><IconSparkle /></div>
-                    <span className="tts-dl-btn-label">HD No Watermark</span>
-                    <span className="tts-dl-btn-sub">⭐ Recommended</span>
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </>
   );
 }
