@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AdBanner from './components/AdBanner';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
@@ -883,7 +884,8 @@ export default function TikTokDownloader() {
           </div>
 
           <footer className="tts-footer">
-            <p>© 2024 TikTok Video Downloader. Not affiliated with TikTok or ByteDance.</p>
+            <p>© 2025 TikTok Video Downloader. Not affiliated with TikTok or ByteDance.</p>
+            <p>© 2025 A Product Of Cyntax LLC</p>
             <p>Use downloaded content responsibly and respect creator rights.</p>
           </footer>
 
