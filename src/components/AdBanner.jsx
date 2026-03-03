@@ -1,39 +1,55 @@
 import { useEffect, useRef } from 'react';
 
-export default function AdBanner({ scriptSrc, containerId }) {
-  const scriptAdded = useRef(false);
+/**
+ * ExoClick Banner Ad — Zone 5863000
+ *
+ * Injects the exact tags provided by ExoClick:
+ *   <script async src="https://a.magsrv.com/ad-provider.js"></script>
+ *   <ins class="eas6a97888e2" data-zoneid="5863000"></ins>
+ *   <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+ *
+ * The ad-provider.js is injected into <head> only once globally.
+ * The <ins> and serve push are injected into this component's container.
+ */
+export default function AdBanner() {
+  const containerRef = useRef(null);
+  const injected = useRef(false);
 
   useEffect(() => {
-    // Avoid duplicate script injection
-    if (scriptAdded.current) return;
-    if (document.querySelector(`script[src="${scriptSrc}"]`)) return;
+    if (injected.current || !containerRef.current) return;
+    injected.current = true;
 
-    const script = document.createElement('script');
-    script.src = scriptSrc;
-    script.async = true;
-    script.setAttribute('data-cfasync', 'false'); // recommended by PropellerAds
-    script.onload = () => {
-      // Some ad networks need a re‑initialization call; PropellerAds usually auto‑runs
-    };
-    document.head.appendChild(script);
-    scriptAdded.current = true;
+    // Step 1 — inject ad-provider.js into <head> once
+    if (!document.querySelector('script[src="https://a.magsrv.com/ad-provider.js"]')) {
+      const providerScript = document.createElement('script');
+      providerScript.async = true;
+      providerScript.type = 'application/javascript';
+      providerScript.src = 'https://a.magsrv.com/ad-provider.js';
+      document.head.appendChild(providerScript);
+    }
 
-    // Optional cleanup – rarely needed for these scripts
-    return () => {
-      // If you ever remove the component, you might want to remove the script
-      // but it's usually safe to leave it.
-    };
-  }, [scriptSrc]);
+    // Step 2 — create the <ins> placeholder inside our container
+    const ins = document.createElement('ins');
+    ins.className = 'eas6a97888e2';
+    ins.setAttribute('data-zoneid', '5863000');
+    containerRef.current.appendChild(ins);
+
+    // Step 3 — push the serve call so ExoClick fills the <ins>
+    const serveScript = document.createElement('script');
+    serveScript.type = 'application/javascript';
+    serveScript.textContent = `(AdProvider = window.AdProvider || []).push({"serve": {}});`;
+    containerRef.current.appendChild(serveScript);
+  }, []);
 
   return (
     <div
-      id={containerId}
+      ref={containerRef}
       style={{
         width: '100%',
-        minHeight: '100px',          // prevents layout shift while ad loads
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        minHeight: '90px',
         overflow: 'hidden',
       }}
     />
