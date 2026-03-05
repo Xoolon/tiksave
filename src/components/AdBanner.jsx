@@ -41,6 +41,7 @@ export default function AdBanner() {
     containerRef.current.appendChild(serveScript);
   }, []);
 
+
   return (
     <div
       ref={containerRef}
@@ -50,7 +51,10 @@ export default function AdBanner() {
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '90px',
-        overflow: 'hidden',
+        overflow: 'hidden',          // ← prevents any absolute children from spilling out
+        position: 'relative',         // ← creates a new stacking context
+        zIndex: 1,                    // ← lower than the main content (optional, adjust if needed)
+        pointerEvents: 'auto',         // ← keeps the ad clickable, but ensures it doesn't block elements outside
       }}
     />
   );

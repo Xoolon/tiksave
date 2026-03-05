@@ -4,7 +4,7 @@ import AnchorAd from './components/AnchorAd';
 import VideoInterstitial from './components/VideoInterstitial';
 
 // ─── Ad frequency config ──────────────────────────────────────────────────────
-const AD_FREQUENCY = 2; // show video interstitial every N completed downloads
+const AD_FREQUENCY = 1; // show video interstitial every N completed downloads
 
 // ─── Utility ─────────────────────────────────────────────────────────────────
 const TIKTOK_PATTERNS = [
