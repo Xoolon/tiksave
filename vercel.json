@@ -7,7 +7,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://tikt-production.up.railway.app/api/$1"
+      "destination": "https://tikt.onrender.com/api/$1"
     }
   ],
   "headers": [
